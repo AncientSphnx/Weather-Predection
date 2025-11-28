@@ -183,17 +183,22 @@ def model_info():
         mse = mean_squared_error(y, y_pred)
         r2 = r2_score(y, y_pred)
         
+        # Get model type and name
+        model_type = type(model).__name__
+        model_name = get_model_display_name(model_type)
+        
         info = {
-            'algorithm': 'Linear Regression',
+            'algorithm': model_name,
+            'model_type': model_type,
             'features': ['day_of_year', 'humidity', 'wind_speed', 'meanpressure'],
             'target': 'meantemp',
             'coefficients': {
-                'day_of_year': float(model.coef_[0]),
-                'humidity': float(model.coef_[1]),
-                'wind_speed': float(model.coef_[2]),
-                'meanpressure': float(model.coef_[3])
+                'day_of_year': float(model.coef_[0]) if hasattr(model, 'coef_') else None,
+                'humidity': float(model.coef_[1]) if hasattr(model, 'coef_') else None,
+                'wind_speed': float(model.coef_[2]) if hasattr(model, 'coef_') else None,
+                'meanpressure': float(model.coef_[3]) if hasattr(model, 'coef_') else None
             },
-            'intercept': float(model.intercept_),
+            'intercept': float(model.intercept_) if hasattr(model, 'intercept_') else None,
             'metrics': {
                 'mse': float(mse),
                 'r2_score': float(r2),
@@ -203,13 +208,44 @@ def model_info():
                 'total_samples': len(df),
                 'date_range': f"{df['date'].min().strftime('%Y-%m-%d')} to {df['date'].max().strftime('%Y-%m-%d')}",
                 'temperature_range': f"{df['meantemp'].min():.1f}°C to {df['meantemp'].max():.1f}°C"
-            }
+            },
+            'model_params': get_model_parameters(model)
         }
         
         return jsonify(info)
         
     except Exception as e:
         return jsonify({'error': f'Failed to get model info: {str(e)}'}), 500
+
+def get_model_display_name(model_type):
+    """Get user-friendly display name for model type"""
+    display_names = {
+        'LinearRegression': 'Linear Regression',
+        'Ridge': 'Ridge Regression',
+        'RandomForestRegressor': 'Random Forest',
+        'GradientBoostingRegressor': 'Gradient Boosting',
+        'Lasso': 'Lasso Regression'
+    }
+    return display_names.get(model_type, model_type)
+
+def get_model_parameters(model):
+    """Get relevant parameters for the model"""
+    params = {}
+    
+    if hasattr(model, 'n_estimators'):
+        params['n_estimators'] = model.n_estimators
+    if hasattr(model, 'max_depth'):
+        params['max_depth'] = model.max_depth
+    if hasattr(model, 'learning_rate'):
+        params['learning_rate'] = model.learning_rate
+    if hasattr(model, 'alpha'):
+        params['alpha'] = model.alpha
+    if hasattr(model, 'min_samples_split'):
+        params['min_samples_split'] = model.min_samples_split
+    if hasattr(model, 'min_samples_leaf'):
+        params['min_samples_leaf'] = model.min_samples_leaf
+    
+    return params
 
 @app.route('/api/historical-data', methods=['GET'])
 def historical_data():

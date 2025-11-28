@@ -96,6 +96,25 @@ class WeatherPredictionApp {
             samplesEl.textContent = modelInfo.dataset_info.total_samples.toLocaleString();
             rangeEl.textContent = modelInfo.dataset_info.date_range;
         }
+
+        // Update algorithm info
+        const algorithmEl = document.getElementById('algorithmName');
+        const detailsEl = document.getElementById('algorithmDetails');
+        if (algorithmEl && modelInfo.algorithm) {
+            algorithmEl.textContent = modelInfo.algorithm;
+            
+            // Create detailed description
+            let details = '';
+            if (modelInfo.model_params) {
+                const params = Object.entries(modelInfo.model_params)
+                    .map(([key, value]) => `${key}: ${value}`)
+                    .join(', ');
+                details = params || 'Optimized for accuracy';
+            } else {
+                details = 'Linear model with regularization';
+            }
+            detailsEl.textContent = details;
+        }
     }
 
     validateInputs(data) {

@@ -526,6 +526,8 @@ input[type="range"]::-moz-range-thumb:hover {
     font-weight: 700;
     color: #667eea;
     margin-bottom: 0.25rem;
+    line-height: 1.2;
+    word-wrap: break-word;
 }
 
 .stat-content p {
