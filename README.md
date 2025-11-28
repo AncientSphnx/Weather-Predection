@@ -6,7 +6,7 @@ An amazing weather prediction web application with machine learning backend and 
 
 - **Real ML Predictions**: Uses your actual trained Linear Regression model from `wheater.py`
 - **Beautiful Weather UI**: Animated weather backgrounds, glass morphism effects, and smooth transitions
-- **Interactive Charts**: Real-time temperature trends with prediction points
+- **Interactive Forms**: Real-time temperature predictions with validation
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile
 - **Fallback Mode**: Works even without backend using simplified predictions
 
@@ -54,11 +54,31 @@ Visit `http://localhost:5000` to see the amazing UI!
 3. **API**: Real-time communication between UI and ML model
 4. **Fallback**: If backend is unavailable, uses simplified local predictions
 
+## Original ML Features
+
+The underlying ML model (`wheater.py`) provides:
+
+1. **Data Preprocessing**  
+   - Converts dates to numeric `day_of_year` for regression.  
+   - Handles outliers in pressure data.  
+
+2. **Machine Learning**  
+   - Trains a **Linear Regression** model using:  
+     - Day of year  
+     - Humidity  
+     - Wind speed  
+     - Mean pressure  
+   - Splits data into train and test sets for evaluation.  
+
+3. **Prediction & Evaluation**  
+   - **Mean Squared Error (MSE)** and **R² Score** metrics.  
+   - Custom input predictions with validation.  
+
 ## Technologies Used
 
 - **Backend**: Flask, scikit-learn, pandas
-- **Frontend**: HTML5, CSS3, JavaScript, Chart.js
+- **Frontend**: HTML5, CSS3, JavaScript
 - **Design**: Glass morphism, weather animations, responsive grid
-- **ML**: Linear Regression with your Delhi Climate dataset
+- **ML**: Linear Regression with Delhi Climate dataset
 
 Enjoy your amazing weather prediction app! 🌤️
